@@ -18,41 +18,41 @@ import java.util.Optional;
 @RequestMapping("books")
 public class BookController {
 
-	@Autowired
-	private BookService bookService;
+    @Autowired
+    private BookService bookService;
 
-	@GetMapping
-	@ResponseStatus(HttpStatus.OK)
-	public List<Book> findAllBooks(int page, int quantityByPage){
-		return bookService.listBooks(page, quantityByPage);
-	}
+    @GetMapping
+    @ResponseStatus(HttpStatus.OK)
+    public List<Book> findAllBooks(int page, int quantityByPage) {
+        return bookService.listBooks(page, quantityByPage);
+    }
 
-	@GetMapping("{/id}")
-	public ResponseEntity findBook(@PathVariable String id){
-		Optional<Book> book = bookService.findBook(id);
+    @GetMapping("{/id}")
+    public ResponseEntity findBook(@PathVariable String id) {
+        Optional<Book> book = bookService.findBook(id);
 
-		if(book.isPresent())
-			return ResponseEntity.ok(book.get());
+        if (book.isPresent())
+            return ResponseEntity.ok(book.get());
 
-		return ResponseEntity.notFound().build();
-	}
+        return ResponseEntity.notFound().build();
+    }
 
-	@PostMapping
-	public ResponseEntity<Void> createBook(@Valid @RequestBody BookRequest bookRequest){
-		Book book = bookService.createBook(bookRequest);
-		return ResponseEntity.created(URI.create("/books/" + book.getId())).build();
-	}
+    @PostMapping
+    public ResponseEntity<Void> createBook(@Valid @RequestBody BookRequest bookRequest) {
+        Book book = bookService.createBook(bookRequest);
+        return ResponseEntity.created(URI.create("/books/" + book.getId())).build();
+    }
 
-	@DeleteMapping
-	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void deleteBook(@PathVariable String id){
-		bookService.deleteBook(id);
-	}
+    @DeleteMapping
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteBook(@PathVariable String id) {
+        bookService.deleteBook(id);
+    }
 
-	@PutMapping("/{id}")
-	@ResponseStatus(HttpStatus.OK)
-	public void updateBook(@Valid @RequestBody BookRequest bookRequest, @PathVariable String id){
-		bookService.updateBook(id, bookRequest);
-	}
+    @PutMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public void updateBook(@Valid @RequestBody BookRequest bookRequest, @PathVariable String id) {
+        bookService.updateBook(id, bookRequest);
+    }
 
 }

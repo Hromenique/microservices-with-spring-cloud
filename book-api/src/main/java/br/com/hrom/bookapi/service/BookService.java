@@ -3,6 +3,7 @@ package br.com.hrom.bookapi.service;
 import br.com.hrom.bookapi.domain.Book;
 import br.com.hrom.bookapi.domain.BookAdapter;
 import br.com.hrom.bookapi.domain.BookRequest;
+import br.com.hrom.bookapi.exception.NotFoundException;
 import br.com.hrom.bookapi.repository.BookRepository;
 import com.google.common.collect.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,14 +30,41 @@ public class BookService {
 		return repository.save(BookAdapter.toBook(bookRequest));
 	}
 
-	public void deleteBook(String id){
+	/**
+	 * Delete a book
+	 *
+	 * @param id book id
+	 * @throws NotFoundException when there is not a book with id
+	 */
+	public void deleteBook(String id) throws NotFoundException{
+		IsThereABookWithId(id);
+
 		repository.delete(id);
 	}
 
-	public void updateBook(String id, BookRequest bookRequest){
+	/**
+	 * Update a book
+	 *
+	 * @param id book id
+	 * @param bookRequest book data to do a book update
+	 * @throws NotFoundException when there is not a book with id
+	 */
+	public void updateBook(String id, BookRequest bookRequest) throws NotFoundException{
+		IsThereABookWithId(id);
+
 		Book book = BookAdapter.toBook(bookRequest);
 		book.setId(id);
 
 		repository.save(book);
+	}
+
+	/**
+	 * Verify if a book exists. When not exists a book, throw a exception
+	 *
+	 * @param id book id
+	 * @throws NotFoundException when there is not a book with id
+	 */
+	private void IsThereABookWithId(String id) throws NotFoundException{
+		repository.findById(id).orElseThrow(() -> new NotFoundException("There is not a book with a id " + id));
 	}
 }
